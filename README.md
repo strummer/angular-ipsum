@@ -22,7 +22,7 @@ nav.config(function($httpProvider) {
 Any JSON you pass in will be processed by angular-ipsum.
 
 Support for:
-[x] Strings
-[x] Numbers
-[ ] Images
-[ ] Paragraphs
+- [x] Strings
+- [x] Numbers
+- [ ] Images
+- [ ] Paragraphs
