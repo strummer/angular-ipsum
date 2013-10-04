@@ -21,6 +21,22 @@ nav.config(function($httpProvider) {
 
 Any JSON you pass in will be processed by angular-ipsum.
 
+
+## Specifying which Ipsum to use
+
+**angular-ipsum** uses Hipster Ipsum() by default.
+
+If you want to use another ipsum, you can override it by setting the variable `$rootScope.ipsum` in your module's `.run`. 
+
+For example:
+```
+nav.run(function($rootScope) {
+    $rootScope.ipsum = 'hipster';
+});
+```
+
+Current 
+
 Support for:
 - [x] Strings
 - [x] Numbers

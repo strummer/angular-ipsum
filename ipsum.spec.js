@@ -14,6 +14,7 @@ describe("factory: ipsumInterceptor", function() {
 
     // Setup http mocks for remote http calls
     beforeEach(inject(function($injector) {
+
         $httpBackend = $injector.get('$httpBackend');
         $httpBackend.when("GET", "static/nav/settings/settings.json")
             .respond(
@@ -26,9 +27,42 @@ describe("factory: ipsumInterceptor", function() {
             .respond("settings go here");
     }));
 
+    // Initialization
+
     it("Should be defined", inject(function($rootScope, ipsumInterceptor) {
       expect(ipsumInterceptor).toBeDefined();
     }));
+
+    it("Should be initialized", inject(function($rootScope, ipsumInterceptor) {
+      expect($rootScope.ipsum).toBeDefined();
+      expect($rootScope.ipsum.initialized).toBeDefined();
+      expect($rootScope.ipsum.initialized).toBeTruthy();
+    }));
+
+    // Config
+
+    it("Should use hipster 'language' by default", inject(function($rootScope, ipsumInterceptor) {
+      var expectedLanguage = 'hipster';
+
+      expect($rootScope.ipsum.language).toEqual(expectedLanguage);
+    }));
+
+    it("Should allow a user to override the language", inject(function($rootScope, ipsumInterceptor) {
+      var expectedLanguage = 'bill-and-ted';
+
+      // Not sure how to test this yet
+      /* testModule.run(function($rootScope) {
+        console.log("got here");
+        $rootScope.ipsum = {
+        language: "hipster1"
+        };
+      });
+
+      expect($rootScope.ipsum.language).toEqual(expectedLanguage); */
+
+    }));
+
+    // Functionality
 
     it("Should not affect non-JSON data", inject(function($http, $rootScope, ipsumInterceptor) {
       var expectedSettings = "settings go here";
