@@ -1,8 +1,8 @@
 /* Ipsum - Override all Factory outputs with lorem ipsum while building */
 
-var ipsum = angular.module('ipsum', []);
+var ipsum = angular.module('ipsum', ['hipster_lang']);
 
-ipsumController = function($rootScope, ipsumContent) {
+ipsumController = function($rootScope, ipsumContent, hipsterFactory) {
   // Runs once when the module is first loaded
   $rootScope.ipsum.initialized = true;
 
@@ -12,13 +12,11 @@ ipsumController = function($rootScope, ipsumContent) {
     $rootScope.ipsum.language = 'hipster';
   }
 
-  // Initialize ipsum strings
-  ipsumContent["string"] = "asjdklfajflkasjlf;jak;fjas";
-  ipsumContent["number"] = 18723489712987498.35;
-  ipsumContent["default"] = "???";
+  // Load external content
+  angular.copy(hipsterFactory, ipsumContent); // Requires deep copy
 };
 
-ipsum.factory('ipsumInterceptor', function($q, $rootScope, $log) {
+ipsum.factory('ipsumInterceptor', function($q, $rootScope, $log, hipsterFactory) {
   // Ipsum factory is called after each httprequest
   if(!$rootScope.ipsum) {
     $rootScope.ipsum = {};
@@ -26,7 +24,7 @@ ipsum.factory('ipsumInterceptor', function($q, $rootScope, $log) {
 
   if(!$rootScope.ipsum.initialized) {
     var ipsumContent = {};
-    ipsumController($rootScope, ipsumContent);
+    ipsumController($rootScope, ipsumContent, hipsterFactory);
   }
 
   return function(promise) {

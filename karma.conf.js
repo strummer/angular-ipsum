@@ -19,6 +19,7 @@ module.exports = function(config) {
 
       // Modules and Tests
       '*.js',
+      'ipsums/*.js'
     ],
 
     // generate js files from html templates
