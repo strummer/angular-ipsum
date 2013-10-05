@@ -59,13 +59,37 @@ describe("factory: ipsumInterceptor", function() {
       });
 
       expect($rootScope.ipsum.language).toEqual(expectedLanguage); */
+    }));
 
+    it("Should be disabled by default", inject(function($http, $rootScope, ipsumInterceptor) {
+      expectedDomain = "www.strummer.io";
+
+      expect($rootScope.ipsum.enabled).toBeUndefined();
+
+      $http.get('static/nav/settings/settings.json').success(function(data) {
+        expect(data.domain).toEqual(expectedDomain);
+      });
+      $httpBackend.flush(); // Needed to cause above $http.get to trigger
+    }));
+
+    it("Should allow the user to enable ipsum", inject(function($http, $rootScope, ipsumInterceptor) {
+      var expectedDomain = "asjdklfajflkasjlf;jak;fjas";
+
+      expect($rootScope.ipsum.enabled).toBeUndefined();
+
+      $rootScope.ipsum.enabled = true;
+
+      $http.get('static/nav/settings/settings.json').success(function(data) {
+        expect(data.domain).toEqual(expectedDomain);
+      });
+      $httpBackend.flush(); // Needed to cause above $http.get to trigger
     }));
 
     // Functionality
 
     it("Should not affect non-JSON data", inject(function($http, $rootScope, ipsumInterceptor) {
       var expectedSettings = "settings go here";
+      $rootScope.ipsum.enabled = true;
 
       $http.get('static/nav/settings/settings').success(function(data) {
         expect(data).toEqual(expectedSettings);
@@ -74,7 +98,9 @@ describe("factory: ipsumInterceptor", function() {
     }));
 
     it("Should affect JSON data", inject(function($http, $rootScope, ipsumInterceptor) {
-      var expectedDomain = "asjdklfajflkasjlf;jak;fjas";  // Default string override until I get real lorem ipsum content
+      var expectedDomain = "asjdklfajflkasjlf;jak;fjas"; 
+      
+      $rootScope.ipsum.enabled = true;
 
       $http.get('static/nav/settings/settings.json').success(function(data, response, test) {
         expect(data.domain).toEqual(expectedDomain);
@@ -85,6 +111,8 @@ describe("factory: ipsumInterceptor", function() {
     it("Should process strings", inject(function($http, $rootScope, ipsumInterceptor) {
       var expectedDomain = "asjdklfajflkasjlf;jak;fjas";  // Default string override until I get real lorem ipsum content
 
+      $rootScope.ipsum.enabled = true;
+
       $http.get('static/nav/settings/settings.json').success(function(data, response, test) {
         expect(data.domain).toEqual(expectedDomain);
       });
@@ -94,6 +122,8 @@ describe("factory: ipsumInterceptor", function() {
     it("Should process numbers", inject(function($http, $rootScope, ipsumInterceptor) {
       var expectedId = 18723489712987498.35;  // Default string override until I get real lorem ipsum content
 
+      $rootScope.ipsum.enabled = true;
+
       $http.get('static/nav/settings/settings.json').success(function(data, response, test) {
         expect(data.id).toEqual(expectedId);
       });
@@ -102,6 +132,8 @@ describe("factory: ipsumInterceptor", function() {
 
     it("Should affect unknown data", inject(function($http, $rootScope, ipsumInterceptor) {
       var expectedObject = "???";  // Default string override until I get real lorem ipsum content
+
+      $rootScope.ipsum.enabled = true;
 
       $http.get('static/nav/settings/settings.json').success(function(data, response, test) {
         expect(data.object).toEqual(expectedObject);

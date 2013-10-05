@@ -31,27 +31,29 @@ ipsum.factory('ipsumInterceptor', function($q, $rootScope, $log) {
 
   return function(promise) {
     return promise.then(function(response) {
-      // We should only affect JSON objects
-      if(response.headers()['content-type'] === "application/json") {
+      // Only kick off logic if app has enabled ipsum (to allow users to toggle on/off on the fly)
+      if($rootScope.ipsum.enabled) {
+        // We should only affect JSON objects
+        if(response.headers()['content-type'] === "application/json") {
+          // Process JSON here
+          data = response.data;
+          ipsumData = {};
 
-        // Process JSON here
-        data = response.data;
-        ipsumData = {};
-
-        angular.forEach(data, function(value, key) {
-          switch(typeof(value)) {
-            case "string":
-              ipsumData[key] = ipsumContent["string"];
-              break;
-            case "number":
-              ipsumData[key] = ipsumContent["number"];
-              break;
-            default:
-              ipsumData[key] = ipsumContent["default"];
-              break;
-          }
-        });
-        response.data = ipsumData;
+          angular.forEach(data, function(value, key) {
+            switch(typeof(value)) {
+              case "string":
+                ipsumData[key] = ipsumContent["string"];
+                break;
+              case "number":
+                ipsumData[key] = ipsumContent["number"];
+                break;
+              default:
+                ipsumData[key] = ipsumContent["default"];
+                break;
+            }
+          });
+          response.data = ipsumData;
+        }
       }
       return response;
     });
